@@ -1,0 +1,151 @@
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <?php
+        //chapcha
+        $numePrenume = null;
+        $localitate = null;
+        $tara = null;
+        $telefon = null;
+        $email = null;
+        $sosire = null;
+        $plecare = null;
+        $adulti = null;
+        $camere = null;
+        $plata = null;
+        $textarea = ' Mesaj Optional';
+        if(isset($_POST['numePrenume'])) $numePrenume = $_POST['numePrenume'];
+        if(isset($_POST['localitate'])) $localitate = $_POST['localitate'];
+        if(isset($_POST['tara'])) $tara = $_POST['tara'];
+        if(isset($_POST['telefon'])) $telefon = $_POST['telefon'];
+        if(isset($_POST['email'])) $email = $_POST['email'];
+        if(isset($_POST['sosire'])) $sosire = $_POST['sosire'];
+        if(isset($_POST['plecare'])) $plecare = $_POST['plecare'];
+        if(isset($_POST['adulti'])) $adulti = $_POST['adulti'];
+        if(isset($_POST['camere'])) $camere = $_POST['camere'];
+        if(isset($_POST['plata'])) {
+            $plata = $_POST['plata'];
+            if($plata == 'cash') {
+                $card = null;
+                $cash = 'selected';
+            }
+            if($plata == 'card') {
+                $card = 'selected';
+                $cash = null;
+            }
+        }
+        if(isset($_POST['textarea'])) $textarea = $_POST['textarea'];
+
+        require_once "recaptchalib.php";
+        //if(isset($_POST['g-recaptcha-response'])) $captcha = $_POST['g-recaptcha-response'];
+        //echo $captcha;
+        $secret = "6Ledfhlgkfdkt56tlk431FhlTK1uU2Eka";
+        $response = null;
+        $reCaptcha = new ReCaptcha($secret);
+        if ($_POST["g-recaptcha-response"]) {
+            $response = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $_POST["g-recaptcha-response"]);
+        }
+        if ($response != null && $response->success) {
+            $Name = "dskgkfd"; //senders name
+            $email1 = "xcvbrggfv@cdvf.ro"; //senders e-mail adress
+            $recipient = "qqq@gmail.com"; //recipient
+
+            $mesaj[] = "Prin intermediul formularului aflat la adresa http://www.hotelhomorod.ro ai primit o rezervare online: ";
+            $mesaj[] = "<br><br><br> Nume: $numePrenume <br>";
+            $mesaj[] = "localitatea: $localitate<br>";
+            $mesaj[] = "telefon: $telefon<br>";
+            $mesaj[] = "e-mail: $email<br>";
+            $mesaj[] = "date-in: $sosire<br>";
+            $mesaj[] = "plecare: $plecare<br>";
+            $mesaj[] = "tara: $tara<br>";
+            $mesaj[] = "adulti: $adulti<br>";
+            $mesaj[] = "camere: $camere<br>";
+            $mesaj[] = "metodata de plata: $plata<br>";
+            $mesaj[] = "mesaj: $textarea<br><br>";
+            $mesaj[] = "de unde a venit acest utilizator:".$_SESSION[ref];
+            $mesaj = implode("", $mesaj);
+
+            $subject = "Rezervare hotelhomorod.ro via site"; //subject
+
+            $headers  = "MIME-Version: 1.0" . "\r\n";
+            $headers .= "Content-type: text/html; charset=iso-8859-1" . "\r\n";
+            $headers .= "From: ". $Name . " <" . $email1 . ">\r\n"; //optional headerfields
+
+            mail($recipient, $subject, $mesaj, $headers); //mail command :)
+
+            echo "<script type='text/javascript'>location.href = 'http://www.hotelhomorod.ro/rezervare-trimisa.html';</script>";
+        } elseif(isset($_POST['numePrenume'])) {
+                $captchaErr = "<div style=''>Completati corect CAPTCHA</div>";
+        }
+        ?>
+
+        <div style="width: 400px">
+            <form role="form" method="post" action="#">
+                <div class="form-group">
+                    <input name="numePrenume" value="<?=$numePrenume?>" class="form-control input-sm" placeholder="Nume Prenume" type="text" required>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input name="localitate" value="<?=$localitate?>" class="form-control input-sm" placeholder="Localitate" type="text" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input name="tara" value="<?=$tara?>" class="form-control input-sm" placeholder="Tara" type="text" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input name="telefon" value="<?=$telefon?>" class="form-control input-sm" placeholder="Telefon" type="tel" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input name="email" value="<?=$email?>" class="form-control input-sm" placeholder="Email" type="email" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input name="sosire" value="<?=$sosire?>" class="form-control input-sm" placeholder="Sosire" type="date" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input name="plecare" value="<?=$plecare?>" class="form-control input-sm" placeholder="Plecare" type="date" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input name="adulti" value="<?=$adulti?>" class="form-control input-sm" placeholder="Adulti" type="number" min="1" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input name="camere" value="<?=$camere?>" class="form-control input-sm" placeholder="Camere" type="number" min="1" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <select name="plata" class="form-control input-sm" required>
+                        <option value="">Metoda de plata</option>
+                        <option value="card" <?=$card?> >Card</option>
+                        <option value="cash" <?=$cash?> >Cash</option>
+                    </select>
+                </div>
+                <div lass="form-group">
+                    <textarea name="textarea" cols="42" ><?=$textarea?></textarea>
+                </div>
+
+                <div class="g-recaptcha" data-sitekey="234wetewrtgewrgerwgedfer"></div>
+                <?=$captchaErr?>
+                <input value="Trimite Rezervarea" class="btn btn-info btn-block" type="submit">
+            </form>
+        </div>
+        <script src='https://www.google.com/recaptcha/api.js'></script>
+        <? //chapcha ?>
